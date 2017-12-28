@@ -1,0 +1,4 @@
+D:\schaazzz\projects\jagged_lua\lua_interface\bin\Release\lua_interface.dll
+D:\schaazzz\projects\jagged_lua\lua_interface\bin\Release\lua_interface.pdb
+D:\schaazzz\projects\jagged_lua\lua_interface\obj\Release\lua_interface.dll
+D:\schaazzz\projects\jagged_lua\lua_interface\obj\Release\lua_interface.pdb
