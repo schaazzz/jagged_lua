@@ -33,7 +33,7 @@ namespace test
 
         static void luaThread()
         {
-            IntPtr luaState = Lua.luaL_newstate();
+            IntPtr luaState = Lua.NewState();
 
             Lua.Callback sharpFunc0 =
                 (IntPtr _luaState) =>
@@ -49,16 +49,12 @@ namespace test
 
             if (luaState != IntPtr.Zero)
             {
-
-                Lua.luaL_openlibs(luaState);
-
                 Lua.ExposeFunction(luaState, sharpFunc0, "sharpFunc0");
                 Lua.ExposeFunction(luaState, sharpSleep, "sharpSleep");
 
-                //string luaScriptString = "test(); TwoPlusTwo = 2+2; print('Hello World'); print('TwoPlusTwo:', TwoPlusTwo);function MyFunction ()\n  print('MyFunction');while true do   print('Hello');  sleep();  end;return 65;\nend;return 5";
                 if (Lua.LoadString(luaState, luaScript) != 0)
                 {
-                    Lua.lua_close(luaState);
+                    Lua.Close(luaState);
                 }
 
                 Lua.CallFunction(luaState, "luaFunc0");

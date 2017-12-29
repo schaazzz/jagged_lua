@@ -1,8 +1,0 @@
-D:\schaazzz\projects\jagged_lua\test\bin\Release\test.exe.config
-D:\schaazzz\projects\jagged_lua\test\bin\Release\test.exe
-D:\schaazzz\projects\jagged_lua\test\bin\Release\test.pdb
-D:\schaazzz\projects\jagged_lua\test\bin\Release\lua_interface.dll
-D:\schaazzz\projects\jagged_lua\test\bin\Release\lua_interface.pdb
-D:\schaazzz\projects\jagged_lua\test\obj\Release\test.csprojResolveAssemblyReference.cache
-D:\schaazzz\projects\jagged_lua\test\obj\Release\test.exe
-D:\schaazzz\projects\jagged_lua\test\obj\Release\test.pdb

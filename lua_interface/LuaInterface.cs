@@ -10,37 +10,55 @@ namespace JaggedLua
     public class Lua
     {
         public const int LUA_MULTRET = (-1);
-
+        
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void Callback (IntPtr lua_State);
 
         [DllImport("lua_core.dll")]
-        public static extern IntPtr luaL_newstate();
+        private static extern IntPtr luaL_newstate();
 
         [DllImport("lua_core.dll")]
-        public static extern void lua_pushcclosure(IntPtr luaState, [MarshalAs(UnmanagedType.FunctionPtr)] Callback func, int n);
+        private static extern void lua_pushcclosure(IntPtr luaState, [MarshalAs(UnmanagedType.FunctionPtr)] Callback func, int n);
 
         [DllImport("lua_core.dll")]
-        public static extern void lua_setglobal(IntPtr luaState, string name);
-
-        //open all Lua libraries
-        [DllImport("lua_core.dll")]
-        public static extern void luaL_openlibs(IntPtr luaState);
+        private static extern void lua_setglobal(IntPtr luaState, string name);
 
         [DllImport("lua_core.dll")]
-        public static extern void lua_close(IntPtr luaState);
+        private static extern void luaL_openlibs(IntPtr luaState);
 
         [DllImport("lua_core.dll")]
-        public static extern int luaL_loadstring(IntPtr luaState, string s);
+        private static extern void lua_close(IntPtr luaState);
 
         [DllImport("lua_core.dll")]
-        public static extern int lua_getglobal(IntPtr luaState, string name);
+        private static extern int luaL_loadstring(IntPtr luaState, string s);
 
         [DllImport("lua_core.dll")]
-        public static extern int lua_tointegerx(IntPtr luaState, int ignore0, int ignore1);
+        private static extern int lua_getglobal(IntPtr luaState, string name);
 
         [DllImport("lua_core.dll")]
-        public static extern int lua_pcallk(IntPtr luaState, int nargs, int nresults, int errfunc, int ignore0, int ignore1);
+        private static extern int lua_tointegerx(IntPtr luaState, int ignore0, int ignore1);
+
+        [DllImport("lua_core.dll")]
+        private static extern int lua_pcallk(IntPtr luaState, int nargs, int nresults, int errfunc, int ignore0, int ignore1);
+
+        public static IntPtr NewState()
+        {
+            IntPtr luaState;
+
+            if (!Environment.Is64BitOperatingSystem)
+            {
+                throw new Exception("JaggedLua only supports 64-bit builds for now...");
+            }
+
+            luaState = luaL_newstate();
+
+            if (luaState != IntPtr.Zero)
+            {
+                luaL_openlibs(luaState);
+            }
+
+            return luaState;
+        }
 
         public static int LoadString(IntPtr luaState, string s)
         {
@@ -51,19 +69,24 @@ namespace JaggedLua
 
         public static void ExposeFunction(IntPtr luaState, Callback func, string name)
         {
-            Lua.lua_pushcclosure(luaState, func, 0);
-            Lua.lua_setglobal(luaState, name);
+            lua_pushcclosure(luaState, func, 0);
+            lua_setglobal(luaState, name);
         }
 
         public static void CallFunction(IntPtr luaState, string name)
         {
-            Lua.lua_getglobal(luaState, name);
-            Lua.lua_pcallk(luaState, 0, 1, 0, 0, 0);
+            lua_getglobal(luaState, name);
+            lua_pcallk(luaState, 0, 1, 0, 0, 0);
         }
 
         public static int GetIntegerReturn(IntPtr luaState)
         {
-            return Lua.lua_tointegerx(luaState, -1, 0);
+            return lua_tointegerx(luaState, -1, 0);
+        }
+
+        public static void Close(IntPtr luaState)
+        {
+            lua_close(luaState);
         }
 
         /*
